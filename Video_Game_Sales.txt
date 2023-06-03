@@ -1,0 +1,253 @@
+## Preview of current data set, Games sales from 1980 to about 2017
+Dataset from Kaggle: https://www.kaggle.com/datasets/ibriiee/video-games-sales-dataset-2022-updated-extra-feat
+
+SELECT 
+DISTINCT  
+*
+FROM 
+  `astral-theory-379217.games.video_game`
+  
+## Seeing there are rows that are N/A where the year is unknown----------------------------------------------------------------
+SELECT 
+DISTINCT
+Year_of_Release
+FROM
+`astral-theory-379217.games.video_game`
+ORDER BY Year_of_Release
+  
+SELECT DISTINCT
+ *
+FROM
+  `astral-theory-379217.games.video_game`
+ WHERE 
+  Year_of_Release = 'N/A'
+
+## Creating a table with the Columns I need, eliminating unneeded columns----------------------------------------------------
+SELECT 
+DISTINCT  
+  Name, 
+  Year_of_Release, 
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,
+  Genre,
+  Platform,
+FROM 
+  `astral-theory-379217.games.video_game`
+  
+## Total Region Sales and Rounded Region Sales as millions of USD / ROUNDED Sales-------------------------------------------
+## Using CTE and subquery
+WITH sales AS(   
+  SELECT DISTINCT
+  Name, 
+  Year_of_Release, 
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,  
+FROM 
+  `astral-theory-379217.games.video_game`
+
+  )
+SELECT 
+  SUM(NA_Sales) as NA,
+  SUM(EU_Sales) as EU,
+  SUM(JP_Sales) as JP,
+  SUM(Other_Sales) as Other_Regions,
+  SUM(Global_Sales) as Global,
+FROM 
+  sales
+
+
+SELECT 
+  ROUND(SUM(NA_Sales)) as NA_sales,
+  ROUND(SUM(EU_Sales)) as EU_sales,
+  ROUND(SUM(JP_Sales)) as JP_sales,
+  ROUND(SUM(Other_Sales)) as Other_Region_sales,
+  ROUND(SUM(Global_Sales)) as Global_Sales,
+FROM 
+  (SELECT DISTINCT
+  Name, 
+  Year_of_Release, 
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,  
+FROM 
+  `astral-theory-379217.games.video_game`)
+ 
+## Aggregated Platform Sales and ROUNDED Platform Sales------------------------------------------------
+SELECT DISTINCT
+  Platform,
+  SUM(NA_Sales) as NA,
+  SUM(EU_Sales) as EU,
+  SUM(JP_Sales) as JP,
+  SUM(Other_Sales) as Other,
+  SUM(Global_Sales) as Global,
+FROM 
+(SELECT DISTINCT
+  Platform,  
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,  
+FROM 
+  `astral-theory-379217.games.video_game`)
+Group BY 
+  Platform
+Order By 
+  Platform
+
+SELECT 
+  Platform,
+  ROUND(SUM(NA_Sales)) as NA,
+  ROUND(SUM(EU_Sales)) as EU,
+  ROUND(SUM(JP_Sales)) as JP,
+  ROUND(SUM(Other_Sales)) as Other,
+  ROUND(SUM(Global_Sales)) as Global,
+FROM 
+(SELECT DISTINCT
+  Platform,  
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,  
+FROM 
+  `astral-theory-379217.games.video_game`)
+Group BY 
+  Platform
+Order By 
+  Platform
+
+## GENRE SALES and ROUNDED Genre Sales -------------------------------------------------------------
+SELECT 
+  Genre,
+  SUM(NA_Sales) as NA,
+  SUM(EU_Sales) as EU,
+  SUM(JP_Sales) as JP,
+  SUM(Other_Sales) as Other,
+  SUM(Global_Sales) as Global,
+FROM 
+   (SELECT 
+  DISTINCT  
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,
+FROM 
+  `astral-theory-379217.games.video_game`
+)
+Group BY 
+  Genre
+Order By 
+  Global DESC
+
+SELECT DISTINCT
+  Genre,
+  ROUND(SUM(NA_Sales)) as NA,
+  ROUND(SUM(EU_Sales)) as EU,
+  ROUND(SUM(JP_Sales)) as JP,
+  ROUND(SUM(Other_Sales)) as Other,
+  ROUND(SUM(Global_Sales)) as Global,
+FROM 
+   (SELECT DISTINCT  
+  Genre, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,
+FROM 
+  `astral-theory-379217.games.video_game`
+)
+Group BY 
+  Genre
+Order By 
+  Global DESC
+
+## PUBLISHER SALES and ROUNDED Publisher Sales -------------------------------------------------------------
+SELECT 
+  Publisher,
+  SUM(NA_Sales) as NA,
+  SUM(EU_Sales) as EU,
+  SUM(JP_Sales) as JP,
+  SUM(Other_Sales) as Other,
+  SUM(Global_Sales) as Global,
+FROM 
+( SELECT DISTINCT
+  Publisher, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,
+FROM
+  `astral-theory-379217.games.video_game`
+)
+Group BY 
+  Publisher
+Order By 
+  Global DESC
+
+  SELECT DISTINCT
+  Publisher,
+  ROUND(SUM(NA_Sales)) as NA,
+  ROUND(SUM(EU_Sales)) as EU,
+  ROUND(SUM(JP_Sales)) as JP,
+  ROUND(SUM(Other_Sales)) as Other,
+  ROUND(SUM(Global_Sales)) as Global,
+FROM 
+( SELECT DISTINCT
+  Publisher, 
+  NA_Sales, 
+  EU_Sales, 
+  JP_Sales, 
+  Other_Sales,
+  Global_Sales,
+FROM
+  `astral-theory-379217.games.video_game`
+)
+Group BY 
+  Publisher
+Order By 
+  Global DESC
+
+----------------------FOR FUN - LEGEND of ZELDA Data ---------------------------------------------------
+## Finding all Legend of Zelda Games
+SELECT *
+FROM 
+`astral-theory-379217.games.video_game`
+WHERE
+Name LIKE '%Zelda%'
+ORDER BY 
+Year_of_Release
+
+SELECT
+Name,
+  SUM(NA_Sales) as NA,
+  SUM(EU_Sales) as EU,
+  SUM(JP_Sales) as JP,
+  SUM(Other_Sales) as Other,
+  SUM(Global_Sales) as Global
+FROM
+`astral-theory-379217.games.video_game`
+WHERE
+Name LIKE '%Zelda%'
+GROUP BY 
+Name
+ORDER BY 
+Global DESC
+  
+
