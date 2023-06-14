@@ -1,6 +1,6 @@
 # In this SQL, I am querying a Spotify dataset from Kaggle to determine interesting insights about the top 50 most listened to songs in 2021.
 
-# The data was downloaded from [HANNA YUKHYMENKO](https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv).
+# The data was downloaded from (https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv).
 
 # Create the table.
 
